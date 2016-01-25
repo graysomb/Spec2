@@ -20,7 +20,9 @@ class Arduino(object):
         '''
         path = "C:\Users\graysomb\Desktop\Spectrometer\Spectometer\CheckAndRead.ino\CheckAndRead.ino.ino"
         command = ["cd", "C:\Program Files (x86)\Arduino", "&&", "arduino", "--board", "arduino:sam:due", "--port", "COM6", "--upload", path]
-        call(command, shell = True)
+        subCall = call(command, shell = True)
+#         This might work
+        subCall.check_call() 
         time.sleep(20)
         print "Loaded"
         self.dataList = []

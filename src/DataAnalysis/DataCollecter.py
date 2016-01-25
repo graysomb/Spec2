@@ -16,17 +16,24 @@ class DataCollecter(object):
     '''
 
 
-    def __init__(self):
+    def __init__(self,connect):
         '''
         Constructor
         '''
         self.motorData = []
         self.lightData = []
         self.lamb = []
+        if connect == True:
+            self.motor = MotorController.MotorController()
+            self.arduino  = Arduino.Arduino()
+        
+    def connectMotor(self):
         self.motor = MotorController.MotorController()
+        
+    def connectArd(self):
         self.arduino  = Arduino.Arduino()
         
-    def collectData(self, start,stop,steps):
+    def collectData(self, start,stop,steps,thread):
         dlam = (stop-start)/steps
         self.arduino.readDataDisc()
         self.arduino.readDataDisc()
@@ -34,8 +41,8 @@ class DataCollecter(object):
         for i in range(steps):
             self.lamb.append(start+dlam*i)
             self.takeData(dlam)
-        
-        return [self.lightData,self.lamb,self.motorData]
+        if thread == False:
+            return [self.lightData,self.lamb,self.motorData]
     
     def takeData(self,dlam):
         start = time.clock()
@@ -74,16 +81,38 @@ class DataCollecter(object):
         
         #move process
         p1 = mp.Process(
-                        target = self.motor.Motor1.mcRel(), 
+                        target = self.motor.Motor1.mcRel, 
                         args = (ang,2.0))
         
         #read process
-        p2 = mp.Process()
+        p2 = mp.Process(target = self.ThreadCollect, args =(ang,child_angPipe,child_lightPipe))
         p1.start()
-        return None
+        p2.start()
+        
+        p2.join()
+        
+        ans1 = 0
+        while ans1 != "end":
+            ans1 = parent_lightPipe.recv()
+            self.lightData.append(ans1)
+            ans2 = parent_angPipe.recv()
+            self.motorData.append(ans2)
+        
+        
     
-    def TThreadCollect(self,angPipe, lightPipe):
-        self.arduino.readDataDisc()
-        self.motor.Motor1.getPos()
+    def TThreadCollect(self,ang,angPipe, lightPipe):
+        start = time.clock()
+        angPipe.send("end")
+        lightPipe.send("end")
+        while time.clock()-start<(ang/2.0):
+            light = self.arduino.readDataDisc()
+            ang = self.motor.Motor1.getPos()
+            angPipe.send(ang)
+            lightPipe.send(light)
+        lightPipe.close()
+        angPipe.close()
+        
+    def printStuff(self):
+        print time.clock()
         
         

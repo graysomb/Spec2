@@ -28,6 +28,9 @@ class Menu(GridLayout):
         super(Menu, self).__init__(**kwargs)
         self.cols = 4
         self.saucier = None
+        self.pMC = None
+        self.pAC = None
+        self.pCollect = None
         '''
         # maximum lambda input
         self.add_widget(Label(text='Max'))
@@ -50,6 +53,9 @@ class Menu(GridLayout):
         self.StartButton = Button( text='Start',
                         on_press=self.start )
         self.add_widget(self.StartButton)
+        # Stop Button
+        self.stopButton = Button(text = 'Stop', on_press=self.stop)
+        self.add_widget(self.stopButton)
         # plot button
         self.plotButton = Button(text = 'Plot', on_press=self.plot)
         self.add_widget(self.plotButton)
@@ -63,20 +69,34 @@ class Menu(GridLayout):
         
     def save(self, i):
         self.saucier.saveData()
+        
     def plot(self, i):
         self.saucier.plot()
         
     def connect(self,i):
-        self.saucier = DataCollecter.DataCollecter(True)
+        self.saucier = DataCollecter.DataCollecter(False)
+        if self.pMC == None:
+            self.pMC = mp.Process(target=self.saucier.connectMotor, args =() )
+            self.pMC.start()
+        else:
+            pass
+        if self.pAC == None:
+            self.pMC = mp.Process(target=self.saucier.connectArd, args =() )
+            self.pMC.start()
+        else:
+            pass
         
     def start(self,i):
         if self.saucier != None :
-            start = time.clock()
-            ans = self.saucier.collectData(0.0, 25.0, 2000, False)
-            print time.clock()-start
-            print ans
+            if self.pCollect == None:
+                self.pCollect = mp.Process(target = self.saucier.collectData, args = (0.0, 25.0, 2000, True))
+                self.pCollect.start()
         else:
             print "CONNECT FIRST"
+            
+    def stop(self,i):
+        if self.pCollect !=None:
+            self.pCollect.terminate()
             
     def thread(self,i):
         self.num =1
@@ -88,7 +108,7 @@ class Menu(GridLayout):
         
     
         
-class Gooy(App):
+class ThreadGooy(App):
 
         
     def build(self):
@@ -98,4 +118,4 @@ class Gooy(App):
         
 if __name__ == '__main__':
     mp.freeze_support()
-    Gooy().run()
+    ThreadGooy().run()
