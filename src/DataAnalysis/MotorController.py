@@ -4,6 +4,10 @@ Created on Dec 8, 2015
 @author: graysomb
 '''
 from PyAPT import APTMotor
+import Tkinter
+import tkMessageBox
+import ErrorHandler
+import multiprocessing as mp
 
 class MotorController(object):
     '''
@@ -19,6 +23,7 @@ class MotorController(object):
         old 83863559
         83815746
         '''
+        self.connectFailed = False
         try:
             self.Motor1 = APTMotor(83863559, HWTYPE=31)
             print self.Motor1.getHardwareInformation()
@@ -29,7 +34,13 @@ class MotorController(object):
             self.Motor1.setVelocityParameters(0.0, 5.0, 5.99976)
             print self.Motor1.getVelocityParameters()
         except Exception as e:
-            print e
+            import ThreadedGUI
+            self.connectFailed = True
+            title = "Motor Connection Error"
+            text = "Motor connection failed, make sure it is connected"
+            p = mp.Process(target = ThreadedGUI.displayError, args =(title, text) )
+            p.start()
+            p.join()
     
     
     def moveMotor(self, ang):

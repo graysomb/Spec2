@@ -20,7 +20,7 @@ void loop() {
     if (data>0){
         int count = 0;
         int sum = 0;
-        int num =100000;
+        int num =10000;
         for (int i=0; i <= num; i++){
           int sensorValue = analogRead(A1);
           sum  = sum+sensorValue;
