@@ -114,9 +114,9 @@ It also handles the data once it has been captured.
             name = Q.get()
             p.join()
             dir = os.getcwd()
-            np.savetxt(dir+'\ ' -' '+ name+'_light' +'.txt', self.lightData, delimiter=',') # saves the intensity data
-            np.savetxt(dir+'\ ' -' ' + name+'_lamb' +'.txt', self.lamb, delimiter=',') # saves the lambda data
-            np.savetxt(dir+'\ ' -' ' + name+'_motor' +'.txt', self.motorData, delimiter=',') # saves the angle data
+            np.savetxt(dir+'\ ' +name+'_light' +'.txt', self.lightData, delimiter=',') # saves the intensity data
+            np.savetxt(dir+'\ '  + name+'_lamb' +'.txt', self.lamb, delimiter=',') # saves the lambda data
+            np.savetxt(dir+'\ ' + name+'_motor' +'.txt', self.motorData, delimiter=',') # saves the angle data
 #             np.savetxt('C:\Users\graysomb\Desktop\Spectrometer\Spectometer\ '+name+'_light' +'.txt', self.lightData, delimiter=',') # saves the intensity data
 #             np.savetxt('C:\Users\graysomb\Desktop\Spectrometer\Spectometer\ '+name+'_lamb' +'.txt', self.lamb, delimiter=',') # saves the lambda data
 #             np.savetxt('C:\Users\graysomb\Desktop\Spectrometer\Spectometer\ '+name+'_motor' +'.txt', self.motorData, delimiter=',') # saves the angle data
@@ -132,7 +132,7 @@ It also handles the data once it has been captured.
         '''
         plots the data collected over lambda
         '''
-        plt.plot(self.lamb,self.lightData)
+        plt.plot(self.motorData,self.lightData)
         plt.show()
 
 #         length = len(self.lightData)
@@ -175,7 +175,7 @@ It also handles the data once it has been captured.
         converts degrees to microns using the grating equation and a calibration angle
         This is the angle between the grating and the concave mirror
         '''
-        self.calAng = 0.09117894270
+        self.calAng = .1000648878
         thetaNP = np.array(theta)
         ThetaRadNP = np.deg2rad(thetaNP)
         lamNP = np.divide(np.sin(ThetaRadNP-self.calAng)+np.sin(self.calAng + ThetaRadNP),0.6)

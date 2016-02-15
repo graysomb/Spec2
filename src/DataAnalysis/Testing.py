@@ -31,7 +31,7 @@ from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.colorpicker import ColorPicker
 
-
+import subprocess
 
 
 # class ThreadGooy(App):
@@ -48,17 +48,21 @@ from kivy.uix.colorpicker import ColorPicker
 if __name__ == '__main__':
     pass
 
-root = Tkinter.Tk()
-var = Tkinter.StringVar()
-var.set('buts')
 
-l = Tkinter.Label(root, textvariable = var)
-l.pack()
-count = 0
-while True:
-    var.set(count)
-    root.update_idletasks()
-    count = count +1
+    command = ["cd", "C:\Program Files (x86)\Arduino", "&&", "arduino", "--install-boards", "arduino:sam"]
+    subprocess.check_output(command, shell=True)
+
+# root = Tkinter.Tk()
+# var = Tkinter.StringVar()
+# var.set('buts')
+# 
+# l = Tkinter.Label(root, textvariable = var)
+# l.pack()
+# count = 0
+# while True:
+#     var.set(count)
+#     root.update_idletasks()
+#     count = count +1
 
 
 # from Tkinter import *

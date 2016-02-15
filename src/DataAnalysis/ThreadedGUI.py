@@ -27,7 +27,7 @@ import serial
 # in implementation, Matplotlib is a plotting library for numpy
 import numpy as np
 import matplotlib.pyplot as plt
-import dateutil
+
 
 
 # these libraries are separate libraries for error messages Tkinter is the standard python gui
@@ -291,7 +291,14 @@ class Menu(GridLayout):
                 if self.saucier.arduino.connectFailed == False and self.saucier.motor.connectFailed == False:
                     max = float(self.maxLamb.text)
                     min = float(self.minLamb.text)
-                    thread.start_new_thread(self.saucier.CollectDataCont,(min,max))
+                    if min>=.8 and max<=2.3:
+                        thread.start_new_thread(self.saucier.CollectDataCont,(min,max))
+                    else:
+                        title = "Range Error"
+                        text  = "Outside range of Spectrometer"
+                        p = mp.Process(target = displayError, args =(title, text) )
+                        p.start()
+                        p.join()
                 else:
                     title = "Connection Error"
                     text  = "Arduino and Motor are still not connected"

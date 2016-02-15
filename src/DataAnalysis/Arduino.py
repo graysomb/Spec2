@@ -42,8 +42,6 @@ class Arduino(object):
 #         self.COM = "6"
             
             
-            
-        
         if loadScript ==True:
             command = ["cd", self.ardPath, "&&", "arduino", "--board", "arduino:sam:due", "--port", "COM"+self.COM, "--upload", self.path]
 
@@ -206,6 +204,8 @@ class Arduino(object):
         f3 = open('ardPath.txt', 'w')
         f3.write(self.ardPath)
         f3.close()
+        command = ["cd", self.ardPath, "&&", "arduino", "--install-boards", "arduino:sam"]
+        subprocess.check_output(command, shell=True)
         
 
         

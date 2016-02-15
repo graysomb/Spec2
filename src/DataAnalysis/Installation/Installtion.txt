@@ -1,0 +1,6 @@
+Install python:
+	
+1) run python-2.7.11.msi
+2) use defualt python location
+3) at the bottom of the packages list select "add python.exe to path" and choose will be installed on local hardrive
+4) run installer.bat as administrator, by right clicking and selecting "run as Administrator"
